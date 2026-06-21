@@ -1,4 +1,4 @@
-# Aoba
+# Aoba (아오바)
 
 A **client-side** Minecraft mod that enables **IME input** (Korean / Japanese / Chinese
 composition) when the game runs as an **X11 / XWayland** client on Linux, for both
