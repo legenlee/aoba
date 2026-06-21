@@ -9,8 +9,6 @@ composition (preedit) never reaches the game. Aoba fixes that so you can type CJ
 in chat, sign edits, world/server name fields, command blocks, and so on, with the
 composition shown **in-game** (underlined preedit) rather than in a separate IME popup.
 
-> **Client-side only.** This mod does nothing on a server and is not required to join one.
-
 ## How it works
 
 Minecraft 26.2 / GLFW 3.5 already have a working IME pipeline (`GLFWPreeditCallback` →
@@ -35,32 +33,8 @@ hint is applied earlier via a `GraphicsBootstrapper` SPI.
 - Minecraft running on **X11 / XWayland** (the default backend).
 - The [Architectury API](https://modrinth.com/mod/architectury-api) mod installed.
 
-## Project structure
-
-```
-aoba/
-├── common/      Shared code: GlxImeMixin (locale + on-the-spot hint), NativeLocale (FFM setlocale)
-├── fabric/      Fabric client entrypoint + fabric.mod.json
-└── neoforge/    NeoForge @Mod(dist=CLIENT) + ImeGraphicsBootstrap (early-window hint)
-```
-
 The `common` module is bundled into each platform jar at build time, so each output is a
 single, self-contained mod jar.
-
-## Versions
-
-| Component | Version |
-| --- | --- |
-| Minecraft | 26.2 |
-| Java | 25 |
-| Architectury Loom | 1.17-SNAPSHOT (`loom-no-remap`) |
-| Architectury Plugin | 3.5.169 |
-| Architectury API | 21.0.2 |
-| Fabric Loader | 0.19.3 |
-| Fabric API | 0.152.2+26.2 |
-| NeoForge | 26.2.0.6-beta |
-
-Versions are centralized in [`gradle.properties`](gradle.properties).
 
 ## Building
 
@@ -79,13 +53,6 @@ Outputs:
 fabric/build/libs/aoba-fabric-<version>.jar
 neoforge/build/libs/aoba-neoforge-<version>.jar
 ```
-
-## Notes
-
-Minecraft 26.2 ships **unobfuscated** (official class names are baked into the game jar,
-and there is no separate Mojang mappings file or Fabric intermediary). Because of this the
-build uses the `dev.architectury.loom-no-remap` plugin: there is no remap step, no
-`mappings` dependency, and the `jar` task produces the final mod jar directly.
 
 ## License
 
