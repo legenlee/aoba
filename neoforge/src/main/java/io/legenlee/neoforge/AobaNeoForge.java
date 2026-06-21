@@ -6,16 +6,12 @@ import io.legenlee.client.AobaClient;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.loading.FMLEnvironment;
 
-@Mod(Aoba.MOD_ID)
+/** Client-only mod: the IME hooks are pointless on a dedicated server. */
+@Mod(value = Aoba.MOD_ID, dist = Dist.CLIENT)
 public final class AobaNeoForge {
 	public AobaNeoForge(IEventBus eventBus) {
-		// Delegate to the common, loader-agnostic init.
 		Aoba.init();
-
-		if (FMLEnvironment.getDist() == Dist.CLIENT) {
-			AobaClient.init();
-		}
+		AobaClient.init();
 	}
 }

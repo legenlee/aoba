@@ -13,9 +13,10 @@ This is an example description! Tell everyone what your mod is about!
 '''
 logoFile = "assets/aoba/icon.png"
 
-# Mixin configs bundled from the common module.
+# Client-only mixins (the config's mixins live under the "client" key, so the Mixin
+# library applies them on the client only).
 [[mixins]]
-config = "aoba.mixins.json"
+config = "aoba.client.mixins.json"
 
 [[dependencies.aoba]]
 modId = "neoforge"

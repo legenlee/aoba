@@ -4,14 +4,19 @@ architectury {
 }
 
 dependencies {
-	implementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+	// Loader is provided at runtime (dev launch / installed loader); compileOnly
+	// avoids duplicate fabric-loader classes on the run classpath.
+	compileOnly "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 	api "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 	api "dev.architectury:architectury-fabric:${rootProject.architectury_api_version}"
 
 	// Common module: compile + dev-runtime classpath. Its classes/resources are
-	// bundled into the jar below.
+	// bundled into the jar below. Keep the dev-runtime entry non-transitive so the
+	// Architectury transformer only processes our common jar, not common's
+	// dependencies (otherwise fabric-loader gets a transformed /tmp copy and the
+	// loader's classpath check trips on the duplicate).
 	implementation project(':common')
-	developmentFabric project(':common')
+	developmentFabric(project(path: ':common')) { transitive = false }
 }
 
 processResources {

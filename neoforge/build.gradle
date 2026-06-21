@@ -8,9 +8,10 @@ dependencies {
 	api "dev.architectury:architectury-neoforge:${rootProject.architectury_api_version}"
 
 	// Common module: compile + dev-runtime classpath. Its classes/resources are
-	// bundled into the jar below.
+	// bundled into the jar below. Keep the dev-runtime entry non-transitive so the
+	// Architectury transformer only processes our common jar, not its dependencies.
 	implementation project(':common')
-	developmentNeoForge project(':common')
+	developmentNeoForge(project(path: ':common')) { transitive = false }
 }
 
 processResources {

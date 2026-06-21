@@ -17,7 +17,6 @@ public final class Aoba {
 
 	// Loader-agnostic common init, called from each platform's entrypoint.
 	public static void init() {
-		LOGGER.info("Hello from Aoba common init!");
 	}
 
 	public static Identifier id(String path) {

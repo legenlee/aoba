@@ -11,13 +11,11 @@
   },
   "license": "LGPL-3.0-only",
   "icon": "assets/aoba/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "main": ["io.legenlee.fabric.AobaFabric"],
     "client": ["io.legenlee.fabric.client.AobaFabricClient"]
   },
   "mixins": [
-    "aoba.mixins.json",
     {
       "config": "aoba.client.mixins.json",
       "environment": "client"
