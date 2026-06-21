@@ -2,7 +2,7 @@
   "required": true,
   "package": "io.legenlee.client.mixin",
   "compatibilityLevel": "JAVA_25",
-  "client": ["GlxImeMixin"],
+  "client": ["GlxImeMixin", "PreeditKeyGuardMixin"],
   "injectors": {
     "defaultRequire": 1
   },

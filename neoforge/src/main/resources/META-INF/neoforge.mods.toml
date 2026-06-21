@@ -13,11 +13,6 @@ This is an example description! Tell everyone what your mod is about!
 '''
 logoFile = "assets/aoba/icon.png"
 
-# Client-only mixins (the config's mixins live under the "client" key, so the Mixin
-# library applies them on the client only).
-[[mixins]]
-config = "aoba.client.mixins.json"
-
 [[dependencies.aoba]]
 modId = "neoforge"
 type = "required"
@@ -38,3 +33,9 @@ type = "required"
 versionRange = "*"
 ordering = "AFTER"
 side = "BOTH"
+
+# Client-only mixins (the config's mixins live under the "client" key, so the Mixin
+# library applies them on the client only). The GraphicsBootstrapper early service lives
+# in a separate companion jar so this jar is processed as a normal mod and these are read.
+[[mixins]]
+config = "aoba.client.mixins.json"

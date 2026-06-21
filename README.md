@@ -33,18 +33,36 @@ hint is applied earlier via a `GraphicsBootstrapper` SPI.
 - Minecraft running on **X11 / XWayland** (the default backend).
 - The [Architectury API](https://modrinth.com/mod/architectury-api) mod installed.
 
-The `common` module is bundled into each platform jar at build time, so each output is a
-single, self-contained mod jar.
+Some launchers (e.g. **MultiMC / Prism**) start the game with an empty `XMODIFIERS`,
+which would leave XIM with no input method to talk to. Aoba detects the input-method
+daemon that is actually running (ibus, fcitx, kime, nimf, uim, scim) and fills it in.
+If your IME isn't auto-detected, force it with `-Daoba.imModule=@im=<module>`.
+
+The `common` module is bundled into each platform jar at build time.
+
+## Installation
+
+Drop the jar(s) for your loader into the `mods` folder:
+
+- **Fabric:** `aoba-fabric-<version>.jar`
+- **NeoForge:** **both** `aoba-neoforge-<version>.jar` **and**
+  `aoba-neoforge-bootstrap-<version>.jar`
+
+> NeoForge ships as two jars. The on-the-spot preedit hint has to be set before NeoForge's
+> early loading-screen window initializes GLFW, which means providing a `GraphicsBootstrapper`
+> early service — and NeoForge marks any jar that provides one as a service-only file, so its
+> `@Mod` and mixins would be skipped. The tiny bootstrap jar carries only that early service;
+> the main jar carries the mod and mixins. Both are required.
 
 ## Building
 
 ```bash
-# Build both platform jars
+# Build everything
 ./gradlew build
 
 # Or build a single platform
 ./gradlew :fabric:build
-./gradlew :neoforge:build
+./gradlew :neoforge:build :neoforge:bootstrapJar
 ```
 
 Outputs:
@@ -52,6 +70,7 @@ Outputs:
 ```
 fabric/build/libs/aoba-fabric-<version>.jar
 neoforge/build/libs/aoba-neoforge-<version>.jar
+neoforge/build/libs/aoba-neoforge-bootstrap-<version>.jar
 ```
 
 ## License

@@ -26,12 +26,12 @@ import java.util.function.LongSupplier;
  * applies. On NeoForge, FML's early loading window calls {@code glfwInit} first, so
  * {@code ImeGraphicsBootstrap} (a {@code GraphicsBootstrapper}) sets the hint earlier.
  */
-@Mixin(GLX.class)
+@Mixin(value = GLX.class, remap = false)
 public class GlxImeMixin {
 
     @Inject(method = "_initGlfw", at = @At("HEAD"))
     private static void aoba$setupIme(CallbackInfoReturnable<LongSupplier> cir) {
-        NativeLocale.setCTypeFromEnvironment();
+        NativeLocale.prepare();
         GLFW.glfwInitHint(GLFW.GLFW_X11_ONTHESPOT, GLFW.GLFW_TRUE);
     }
 }

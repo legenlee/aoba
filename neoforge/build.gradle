@@ -3,6 +3,16 @@ architectury {
 	neoForge()
 }
 
+// The GraphicsBootstrapper early service is built into a SEPARATE jar (see bootstrapJar).
+// NeoForge's EarlyServiceDiscovery claims any jar that provides an early service and marks
+// it service-only (languages []), so the main mod jar must NOT contain the service —
+// otherwise its @Mod and mods.toml [[mixins]] are never processed.
+sourceSets {
+	bootstrap {
+		compileClasspath += sourceSets.main.compileClasspath
+	}
+}
+
 dependencies {
 	neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
 	api "dev.architectury:architectury-neoforge:${rootProject.architectury_api_version}"
@@ -28,3 +38,16 @@ tasks.named('jar', Jar) {
 	from(project(':common').sourceSets.main.output)
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+// Tiny companion jar that only provides the GraphicsBootstrapper early service (plus the
+// shared classes it needs). Ship it alongside the main jar in the mods folder.
+def bootstrapJar = tasks.register('bootstrapJar', Jar) {
+	archiveBaseName = 'aoba-neoforge-bootstrap'
+	from sourceSets.bootstrap.output
+	from(project(':common').sourceSets.main.output) {
+		include 'io/legenlee/Aoba.class'
+		include 'io/legenlee/client/NativeLocale.class'
+	}
+}
+
+tasks.named('assemble') { dependsOn bootstrapJar }
