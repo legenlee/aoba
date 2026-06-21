@@ -3,11 +3,12 @@
   "id": "aoba",
   "version": "${version}",
   "name": "Aoba",
-  "description": "This is an example description! Tell everyone what your mod is about!",
-  "authors": ["Me!"],
+  "description": "Client-side IME support for Minecraft on Linux (X11 / XWayland): type Korean / Japanese / Chinese in-game, with composition shown inline.",
+  "authors": ["LegenLee"],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/LegenLee/aoba",
+    "sources": "https://github.com/LegenLee/aoba",
+    "issues": "https://github.com/LegenLee/aoba/issues"
   },
   "license": "LGPL-3.0-only",
   "icon": "assets/aoba/icon.png",
