@@ -1,0 +1,25 @@
+pluginManagement {
+	repositories {
+		maven {
+			name = 'Fabric'
+			url = 'https://maven.fabricmc.net/'
+		}
+		maven {
+			name = 'Architectury'
+			url = 'https://maven.architectury.dev/'
+		}
+		maven {
+			name = 'NeoForged'
+			url = 'https://maven.neoforged.net/releases/'
+		}
+		gradlePluginPortal()
+		mavenCentral()
+	}
+}
+
+// Should match your modid
+rootProject.name = 'aoba'
+
+include('common')
+include('fabric')
+include('neoforge')

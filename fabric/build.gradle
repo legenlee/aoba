@@ -1,0 +1,30 @@
+architectury {
+	platformSetupLoomIde()
+	fabric()
+}
+
+dependencies {
+	implementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+	api "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+	api "dev.architectury:architectury-fabric:${rootProject.architectury_api_version}"
+
+	// Common module: compile + dev-runtime classpath. Its classes/resources are
+	// bundled into the jar below.
+	implementation project(':common')
+	developmentFabric project(':common')
+}
+
+processResources {
+	inputs.property 'version', project.version
+
+	filesMatching('fabric.mod.json') {
+		expand version: project.version
+	}
+}
+
+// Minecraft 26.2 is unobfuscated, so there is no remapJar step: the `jar` task
+// produces the final mod jar. Bundle the common module straight into it.
+tasks.named('jar', Jar) {
+	from(project(':common').sourceSets.main.output)
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

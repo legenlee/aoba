@@ -1,0 +1,39 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "CC0-1.0"
+issueTrackerURL = "https://github.com/FabricMC/fabric-example-mod"
+
+[[mods]]
+modId = "aoba"
+version = "${version}"
+displayName = "Aoba"
+authors = "Me!"
+description = '''
+This is an example description! Tell everyone what your mod is about!
+'''
+logoFile = "assets/aoba/icon.png"
+
+# Mixin configs bundled from the common module.
+[[mixins]]
+config = "aoba.mixins.json"
+
+[[dependencies.aoba]]
+modId = "neoforge"
+type = "required"
+versionRange = "[26.2,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.aoba]]
+modId = "minecraft"
+type = "required"
+versionRange = "[26.2,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.aoba]]
+modId = "architectury"
+type = "required"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"

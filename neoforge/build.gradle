@@ -1,0 +1,29 @@
+architectury {
+	platformSetupLoomIde()
+	neoForge()
+}
+
+dependencies {
+	neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
+	api "dev.architectury:architectury-neoforge:${rootProject.architectury_api_version}"
+
+	// Common module: compile + dev-runtime classpath. Its classes/resources are
+	// bundled into the jar below.
+	implementation project(':common')
+	developmentNeoForge project(':common')
+}
+
+processResources {
+	inputs.property 'version', project.version
+
+	filesMatching('META-INF/neoforge.mods.toml') {
+		expand version: project.version
+	}
+}
+
+// Minecraft 26.2 is unobfuscated, so there is no remapJar step: the `jar` task
+// produces the final mod jar. Bundle the common module straight into it.
+tasks.named('jar', Jar) {
+	from(project(':common').sourceSets.main.output)
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

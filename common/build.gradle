@@ -1,0 +1,15 @@
+architectury {
+	common rootProject.enabled_platforms.split(',')
+}
+
+dependencies {
+	// Minecraft 26.2 is unobfuscated, so the no-remap Loom takes plain
+	// implementation/api dependencies (there is no mod remapping step).
+
+	// Fabric Loader, used in common only for the @Environment annotations.
+	// Do NOT use other classes from Fabric Loader in the common module.
+	implementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+
+	// Architectury API. Use api so it is exposed to the platform subprojects.
+	api "dev.architectury:architectury:${rootProject.architectury_api_version}"
+}
