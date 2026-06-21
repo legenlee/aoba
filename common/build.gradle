@@ -13,3 +13,59 @@ dependencies {
 	// Architectury API. Use api so it is exposed to the platform subprojects.
 	api "dev.architectury:architectury:${rootProject.architectury_api_version}"
 }
+
+// ---------------------------------------------------------------------------
+// Native Wayland text-input-v3 bridge (libaoba_ime.so).
+//
+// Linux-only: generates protocol glue with wayland-scanner, compiles the JNI
+// shim with cc, and bundles the result at natives/linux/<arch>/ inside the jar.
+// On non-Linux hosts the whole pipeline is skipped (the bridge no-ops at runtime).
+// ---------------------------------------------------------------------------
+import org.gradle.internal.os.OperatingSystem
+
+if (OperatingSystem.current().isLinux()) {
+	def nativeDir   = file('src/main/native')
+	def protocolXml = file('src/main/native/protocols/text-input-unstable-v3.xml')
+	def genDir      = layout.buildDirectory.dir('generated/wayland')
+	def headerFile  = genDir.map { it.file('text-input-unstable-v3-client-protocol.h') }
+	def protocolC   = genDir.map { it.file('text-input-unstable-v3-protocol.c') }
+	def arch        = (System.getProperty('os.arch') in ['amd64', 'x86_64']) ? 'x86_64' : 'aarch64'
+	def soFile      = layout.buildDirectory.file("generated/native-resources/natives/linux/${arch}/libaoba_ime.so")
+
+	def scanHeader = tasks.register('waylandScannerHeader', Exec) {
+		inputs.file protocolXml
+		outputs.file headerFile
+		doFirst { genDir.get().asFile.mkdirs() }
+		commandLine 'wayland-scanner', 'client-header',
+				protocolXml.absolutePath, headerFile.get().asFile.absolutePath
+	}
+
+	def scanCode = tasks.register('waylandScannerCode', Exec) {
+		inputs.file protocolXml
+		outputs.file protocolC
+		doFirst { genDir.get().asFile.mkdirs() }
+		commandLine 'wayland-scanner', 'private-code',
+				protocolXml.absolutePath, protocolC.get().asFile.absolutePath
+	}
+
+	def compileNative = tasks.register('compileImeNative', Exec) {
+		dependsOn scanHeader, scanCode
+		def javaHome = System.getProperty('java.home')
+		def cSource  = file('src/main/native/aoba_ime.c')
+		inputs.file cSource
+		inputs.file protocolC
+		inputs.file headerFile
+		outputs.file soFile
+		doFirst { soFile.get().asFile.parentFile.mkdirs() }
+		commandLine 'cc', '-shared', '-fPIC', '-O2',
+				"-I${javaHome}/include", "-I${javaHome}/include/linux",
+				"-I${genDir.get().asFile}",
+				cSource.absolutePath, protocolC.get().asFile.absolutePath,
+				'-o', soFile.get().asFile.absolutePath,
+				'-lwayland-client'
+	}
+
+	// Bundle the compiled .so as a resource.
+	sourceSets.main.resources.srcDir(layout.buildDirectory.dir('generated/native-resources'))
+	tasks.named('processResources') { dependsOn compileNative }
+}
